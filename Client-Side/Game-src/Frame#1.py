@@ -1,12 +1,15 @@
 from Tkinter import *
+from client import *
 import time
-            
+
+
 class Test(Frame):
-    
+
     def mouseDown(self, event):
         # remember where the mouse went down
         self.lastx = event.x
         self.lasty = event.y
+
         return(event.x,event.y)
 
     def mouseMove(self, event):
@@ -14,8 +17,8 @@ class Test(Frame):
         self.draw.move(CURRENT, event.x - self.lastx, event.y - self.lasty)
         self.lastx = event.x
         self.lasty = event.y
-        
-        
+
+
     def arrowMove(self,event):
          if event.keysym == 'Up':
              self.draw.move(1, 0, -3)
@@ -30,7 +33,7 @@ class Test(Frame):
 
     def quit(self):
        self.draw.destroy()
-       
+
     def mouseEnter(self, event):
         # the CURRENT tag is applied to the object the cursor is over.
         # this happens automatically.
@@ -42,7 +45,7 @@ class Test(Frame):
         self.draw.itemconfig(CURRENT, fill="blue")
 
 
-    #Grid 
+    #Grid
     def checkered(self, canvas, line_distance):
 
          # vertical lines at an interval of "line_distance" pixel
@@ -59,7 +62,7 @@ class Test(Frame):
    #         self.checkered(self.draw,20)
    #     else:
    #         pass
-   #  def bulletRelease(self   
+   #  def bulletRelease(self
    #      while(1):
    #         if event.keysym == 'Up':
    #              for x in range(0, 60):
@@ -67,22 +70,23 @@ class Test(Frame):
    #                self.draw.update()
    #                time.sleep(0.05)
 
-    def bulletRelease(self, canvas):   
+    def bulletRelease(self, canvas):
+        current_object = client_test()
         for x in range(0, 60):
-            self.draw.move(1, 4, 0)
+            self.draw.move(current_object, 4, 0)
             self.draw.update()
             time.sleep(0.05)
 
-            
+
     def createWidgets(self):
         self.QUIT = Button(self, text='QUIT', activebackground='grey', activeforeground='#AB78F1',bg='#58F0AB',highlightcolor='red',padx='10px',
                            command= self.quit)
-        
+
         self.QUIT.pack(side=RIGHT)
         self.QUIT.config( height = 5, width = 10 )
-        
+
         #for Grid
-        
+
         #self.var1 = IntVar()
         #self.check1 = Checkbutton(self, text="Enable grid", variable= self.var1, command = self.var_states )
         #self.check1.pack(side=RIGHT)
@@ -95,12 +99,12 @@ class Test(Frame):
         self.draw.create_polygon(250,70 ,300,70 , 300,25 , 250,25)
 
         self.bulletRelease(bullet)
-       
+
         #circ1 = self.draw.create_oval(100,100, 200,110,fill = 'blue')
         #circ2 = self.draw.create_oval(90,100, 100,110, fill = 'blue')
-       
+
         self.draw.tag_bind(shooter, "<Any-Enter>", self.mouseEnter)
-        self.draw.tag_bind(shooter, "<Any-Leave>", self.mouseLeave)  
+        self.draw.tag_bind(shooter, "<Any-Leave>", self.mouseLeave)
         self.draw.tag_bind(shooter, "<KeyPress>", self.mouseEnter)
         Widget.bind(self.draw, "<Button-1>", self.mouseDown)
         Widget.bind(self.draw, "<B1-Motion>", self.mouseMove)
@@ -110,13 +114,13 @@ class Test(Frame):
         self.draw.bind_all('<KeyPress-Right>', self.arrowMove)
 
 
-       
+
     def __init__(self, master=None):
 
         Frame.__init__(self, master)
         Pack.config(self)
         self.createWidgets()
-        
+
 
 
 test = Test()
