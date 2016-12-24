@@ -10,4 +10,4 @@ def server_test(current_object):
     c,a = s.accept()
     print "recieved connection form",a
     c.send(str(current_object))
-        #s.close()
+    s.close()
