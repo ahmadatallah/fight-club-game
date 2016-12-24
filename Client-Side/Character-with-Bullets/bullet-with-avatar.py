@@ -15,7 +15,7 @@ class alien(object):
         self.bullets = []
         self.canvas = Canvas(self.root, width=800, height = 800)
         ## this should sent form the player but here is fixed for
-        ## just for test 
+        ## just for test
         self.canvas.create_oval(50, 50, 150, 150, outline='white',fill='blue',tags="m")
         self.canvas.pack()
         self.root.after(0, self.animation)
