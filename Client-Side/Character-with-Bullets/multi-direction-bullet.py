@@ -23,6 +23,8 @@ class alien(object):
         self.root = Tk()
             # self.m = 1
             # self.n = 1
+        w = Entry(self.root)
+        w.pack()
         self.AvatarSpeed = 10
         self.score = 0
         self.bullets = []
