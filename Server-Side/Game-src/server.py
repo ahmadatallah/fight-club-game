@@ -1,9 +1,19 @@
+import sys
+import argparse
 import socket
 import threading
 s= socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.bind(("",3075))
 
-
+try:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("port", help="Enter the Port number",
+                type=long)
+    args = parser.parse_args()
+except:
+    e = sys.exc_info()[0]
+    print e
+port = args.port
+s.bind(("",port))
 clients = []
 address = []
 i=0

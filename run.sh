@@ -1,4 +1,6 @@
 #!/bin/bash
-gnome-terminal -x python Server-Side/Game-src/Frame#1.py
+gnome-terminal -x python Server-Side/Game-src/server.py 3300 
 sleep 3
-python Client-Side/Game-src/Frame#1.py
+python Client-Side/Game-src/gameFrame.py 3300  & 
+python Client-Side/Game-src/gameFrame.py 3300 
+
