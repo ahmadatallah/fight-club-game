@@ -1,6 +1,5 @@
 # Assuming Python 2.x
 # For Python 3.x support change print -> print(..) and Tkinter to tkinter
-import sys
 from Tkinter import *
 import time
 import random, string
@@ -8,9 +7,13 @@ from random import randint
 import threading
 import socket
 import json
-
-
-
+import pyaudio
+import wave
+CHUNK = 1024
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+RECORD_SECONDS = 2
 class alien(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -24,25 +27,32 @@ class alien(Frame):
         self.initUI()
         self.bind_()
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        #Put Your IP
-        try:
-            self.port = long (sys.argv[1])
-
-        except:
-            print "Enter Port number"
-            
-        #Put Your IP
-        self.socket.connect(("",self.port))
+        self.socket.connect(("",2700))  ##10.100.1.113##
         threading.Thread(target = self.socket_handle).start()
+        #threading.Thread(target = self.send_sound).start()
+        #self.send_sound()
+    '''def send_sound(self):
+        p = pyaudio.PyAudio()
 
-        '''
-        Frame setup:
-           3 Frames:
-       - frame for the game window
-       - frame for the score
-       - frame for the chat
-       '''
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK)
 
+        print("*recording")
+
+        frames = []
+        print "xxx"
+        for i in range(0, int(RATE/CHUNK*RECORD_SECONDS)):
+         print "yyy"
+         data  = stream.read(CHUNK)
+         frames.append(data)
+         self.socket.sendall(data)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+'''
     def initUI(self):
         self.parent.title("Windows")
         self.pack(fill=BOTH, expand=True)
@@ -131,13 +141,12 @@ class alien(Frame):
         canvas.pack()
         canvas.update()
 
-    '''
-        Method that take the written message and send it from player one to player two
-    '''
     def send(self):
         if len(self.message_entry.get()) != 0:
             current_msg= self.message_entry.get()
+            # self.getMessge()
             player_name= self.getPlayerName()
+            # player_message =self.getPlayerMessage()
             new_message= '<'+player_name +'> :' + current_msg + "\n"
             self.chat_history.config(state=NORMAL)
             self.chat_history.insert(INSERT,new_message)
@@ -145,6 +154,11 @@ class alien(Frame):
             curr_msg = self.serialize_message(current_msg)
             self.socket.send(curr_msg)
             # return current_msg
+            '''
+            current_msg: to be sent to the server/all player_message
+            '''
+
+
     def getPlayerName(self):
 
         '''
@@ -153,11 +167,13 @@ class alien(Frame):
         '''
         return 'ahmad'
 
+                # def getPlayerMessage(self):
+                #     curr_msg = send()
+
         '''
         code to return player message
         to be displayed
         '''
-
 
     def randomword(self):
       return ''.join(random.choice(string.lowercase) for i in range(randint(3,9)))
@@ -166,11 +182,11 @@ class alien(Frame):
     def motion(self,event):
         m = event.x
         n = event.y
+        #print m, n
         try:
             threading.Thread(target=self.bulletFire , args =(m,n)).start()
         except Exception, errtxt:
             print errtxt
-
 
     def socket_handle(self):
         while True:
@@ -178,25 +194,33 @@ class alien(Frame):
                  json_data= self.socket.recv(1024)
                  if len(json_data) >0:
                     print json_data
+                    #   threading.Thread(target = self.readSocket, args =  json_data  ).start()
                     self.readSocket(json_data)
+                    # time.sleep(0.025)
              except Exception as e:
                  raise
 
-    '''
-    Bullet Fire for the first player
-    '''
+
 
     def bulletFire(self,x,y):
+
+        ##Connection Thread##
+        # here You should take coordinates of avatar coordinates to draw the opposite player avatar_coords = (x1,y1,x2,y2)
         Avatar_coords  = self.canvas.coords("myChip")
         enemy_coords = self.canvas.coords("enemyAvatar")
         if len(enemy_coords) == 0:
             return
+        # print Avatar_coords
         limitx1 = enemy_coords[0]
         limitx2 = enemy_coords[2]
         limity1 = enemy_coords[1]
         limity2 = enemy_coords[3]
+
         diffX = x - Avatar_coords[0]
         diffY = y - Avatar_coords[1]
+
+        #print diffX ,diffY
+
         if diffX==0 :
             bulletSpeed_X = 0
             bulletSpeed_Y = 1 * (diffY/abs(diffY))
@@ -210,6 +234,7 @@ class alien(Frame):
             bulletSpeed_Y = abs(slope) * (diffY/abs(diffY))
             bulletSpeed_X = 1 * (diffX/abs(diffX))
 
+        #print bulletSpeed_X ,bulletSpeed_Y
 
         normal = max( abs(bulletSpeed_X), abs(bulletSpeed_Y))
 
@@ -223,13 +248,27 @@ class alien(Frame):
         self.canvas.pack()
         self.canvas.update()
         myHealth = 10
+        # addscored = 0
         while(True):
+
+
             time.sleep(0.025)
 
+            #### connection thread ###
+            #here you should send coordinates of the bullet in every time  bullet_coords = (x1,y1,x2,y2)
             bullet_coords = self.canvas.coords(tagname)
 
             stopx = bullet_coords[0]
             stopy = bullet_coords[1]
+            # print  bullet_coords[1]
+            # limity = bullet_coords[1]
+            # limitx = bullet_coords[0]
+            # tempy = limity
+            # tempx = limitx
+            # tempn = tempy
+            # tempm = tempx
+            # print tempn, tempm
+
             self.canvas.move(bullet, bulletSpeed_X, bulletSpeed_Y)
             if ((75<stopy<150) or (350<stopy<425)):
                    if ((75 < stopx < 150) or (300 < stopx< 375) ):
@@ -243,10 +282,13 @@ class alien(Frame):
                        self.canvas.delete(tagname)
                        break
             self.canvas.update()
+        # self.canvas.update()
         self.canvas.delete(tagname)
 
         self.canvas.update()
         self.canvas.delete(tagname)
+        # self.score += addscored
+
         if (self.score == 10):
            self.canvas.delete("m")
 
@@ -292,8 +334,10 @@ class alien(Frame):
                                 self.canvas.delete("enemyAvatar")
                                 break
                         elif key=="position":
+                            #print data
                             self.addEnemy(value[0],value[1])
                         elif key=="bulletMove":
+                            #enemyBullet(value[0],value[1])
                             threading.Thread(target = self.enemyBullet , args=(value[0],value[1])).start()
                         elif key== "message":
                             new_message= '<'+'player_2' +'> :' + value + "\n"
@@ -374,6 +418,7 @@ class alien(Frame):
                                self.socket.send(self.serialize_finish())
                            break
                 self.canvas.update()
+            # self.canvas.update()
             self.canvas.delete(tagname)
 
     def addEnemy(self,x,y):
