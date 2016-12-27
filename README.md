@@ -1,18 +1,18 @@
 # TCP-IPmultiplayerGame
-#This Repo contains two sides one for clients (2 player maximum till now)
-#Client-Side/Game-src/gameFrame.py
-#and one for server  
-#server.py
+This Repo contains two sides one for clients (2 player maximum till now)<br />
+Client-Side/Game-src/gameFrame.py <br />
+and one for server <br />
+Server-Side/Game-src/server.py <br />
 
 # Commands to test
-on server:
-python Server-Side/Game-src/server.py <port number>
-on client:
-python Client-Side/Game-src/gameFrame.py <port number>
-besides The IP number
+on server: <br />
+python Server-Side/Game-src/server.py <port number>  <br />
+on client: <br />
+python Client-Side/Game-src/gameFrame.py <port number> <br />
+besides The IP number <br />
 
-server and client on the same:
-python Server-Side/Game-src/server.py <port number>
-sleep 3
-python Client-Side/Game-src/gameFrame.py <port number> &
-python Client-Side/Game-src/gameFrame.py <port number>
+server and client on the same: <br />
+python Server-Side/Game-src/server.py <port number> <br />
+sleep 3 <br />
+python Client-Side/Game-src/gameFrame.py <port number> & <br />
+python Client-Side/Game-src/gameFrame.py <port number> <br />
