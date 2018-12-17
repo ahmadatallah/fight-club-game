@@ -1,4 +1,4 @@
-# TCP-IPmultiplayerGame
+# Fight Club Bullet Shooting Game
 This Repo contains two sides one for clients (2 player maximum till now)<br />
 Client-Side/Game-src/gameFrame.py <br />
 and one for server <br />
