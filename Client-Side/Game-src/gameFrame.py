@@ -29,8 +29,7 @@ class alien(Frame):
         self.socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.socket.connect(("",2700))  ##10.100.1.113##
         threading.Thread(target = self.socket_handle).start()
-        #threading.Thread(target = self.send_sound).start()
-        #self.send_sound()
+
     '''def send_sound(self):
         p = pyaudio.PyAudio()
 
@@ -39,22 +38,19 @@ class alien(Frame):
                         rate=RATE,
                         input=True,
                         frames_per_buffer=CHUNK)
-
         print("*recording")
-
         frames = []
-        print "xxx"
         for i in range(0, int(RATE/CHUNK*RECORD_SECONDS)):
-         print "yyy"
          data  = stream.read(CHUNK)
          frames.append(data)
          self.socket.sendall(data)
         stream.stop_stream()
         stream.close()
         p.terminate()
-'''
+    '''
+
     def initUI(self):
-        self.parent.title("Windows")
+        self.parent.title("Fight Club Game")
         self.pack(fill=BOTH, expand=True)
 
 #-----------frame one ------------#
@@ -165,10 +161,10 @@ class alien(Frame):
         code to return player name
         to be displayed
         '''
-        return 'ahmad'
+        return 'player 1'
 
-                # def getPlayerMessage(self):
-                #     curr_msg = send()
+        # def getPlayerMessage(self):
+        #     curr_msg = send()
 
         '''
         code to return player message
@@ -182,7 +178,6 @@ class alien(Frame):
     def motion(self,event):
         m = event.x
         n = event.y
-        #print m, n
         try:
             threading.Thread(target=self.bulletFire , args =(m,n)).start()
         except Exception, errtxt:
@@ -193,7 +188,6 @@ class alien(Frame):
              try:
                  json_data= self.socket.recv(1024)
                  if len(json_data) >0:
-                    print json_data
                     #   threading.Thread(target = self.readSocket, args =  json_data  ).start()
                     self.readSocket(json_data)
                     # time.sleep(0.025)
@@ -210,7 +204,7 @@ class alien(Frame):
         enemy_coords = self.canvas.coords("enemyAvatar")
         if len(enemy_coords) == 0:
             return
-        # print Avatar_coords
+
         limitx1 = enemy_coords[0]
         limitx2 = enemy_coords[2]
         limity1 = enemy_coords[1]
@@ -218,8 +212,6 @@ class alien(Frame):
 
         diffX = x - Avatar_coords[0]
         diffY = y - Avatar_coords[1]
-
-        #print diffX ,diffY
 
         if diffX==0 :
             bulletSpeed_X = 0
@@ -234,8 +226,6 @@ class alien(Frame):
             bulletSpeed_Y = abs(slope) * (diffY/abs(diffY))
             bulletSpeed_X = 1 * (diffX/abs(diffX))
 
-        #print bulletSpeed_X ,bulletSpeed_Y
-
         normal = max( abs(bulletSpeed_X), abs(bulletSpeed_Y))
 
         bulletSpeed_X = (bulletSpeed_X/normal) * 10
@@ -248,10 +238,7 @@ class alien(Frame):
         self.canvas.pack()
         self.canvas.update()
         myHealth = 10
-        # addscored = 0
         while(True):
-
-
             time.sleep(0.025)
 
             #### connection thread ###
@@ -260,14 +247,6 @@ class alien(Frame):
 
             stopx = bullet_coords[0]
             stopy = bullet_coords[1]
-            # print  bullet_coords[1]
-            # limity = bullet_coords[1]
-            # limitx = bullet_coords[0]
-            # tempy = limity
-            # tempx = limitx
-            # tempn = tempy
-            # tempm = tempx
-            # print tempn, tempm
 
             self.canvas.move(bullet, bulletSpeed_X, bulletSpeed_Y)
             if ((75<stopy<150) or (350<stopy<425)):
@@ -276,12 +255,11 @@ class alien(Frame):
                     #    addscored += 1
                        break
             if ((limity1<stopy<limity2)):
-                   print "zzzz"
                    if ((limitx1 < stopx < limitx2)):
-                       print "fffff"
                        self.canvas.delete(tagname)
                        break
             self.canvas.update()
+
         # self.canvas.update()
         self.canvas.delete(tagname)
 
@@ -322,22 +300,16 @@ class alien(Frame):
         self.socket.send(json_map)
 
     def readSocket(self,data):
-          print data
           try:
                 data = json.loads(data)
-
                 for key,value in data.items():
-
                         if key=="status":
-
                             if value==0:
                                 self.canvas.delete("enemyAvatar")
                                 break
                         elif key=="position":
-                            #print data
                             self.addEnemy(value[0],value[1])
                         elif key=="bulletMove":
-                            #enemyBullet(value[0],value[1])
                             threading.Thread(target = self.enemyBullet , args=(value[0],value[1])).start()
                         elif key== "message":
                             new_message= '<'+'player_2' +'> :' + value + "\n"
@@ -352,28 +324,24 @@ class alien(Frame):
             position  = [pos_x,pos_y]
             json_map["position"] = position
             json_data = json.dumps(json_map)
-            #print json_data
             return json_data
 
     def serialize_message(self,message):
             json_map = {}
             json_map["message"] = message
             json_data = json.dumps(json_map)
-            #print json_data
             return json_data
     def serialize_bullet(self,pos_x,pos_y):
             json_map = {}
             position  = [pos_x,pos_y]
             json_map["bulletMove"] = position
             json_data = json.dumps(json_map)
-            #print json_data
             return json_data
 
     def serialize_finish(self):
            json_map = {}
            json_map["status"] = 0
            json_data = json.dumps(json_map)
-           #print json_data
            return json_data
 
 
@@ -397,7 +365,6 @@ class alien(Frame):
                 stop = self.canvas.coords(tagname)
                 stopx = stop[0]
                 stopy = stop[1]
-                # print stop
                 self.canvas.move(bullet, speedX, speedY)
                 if ((75<stopy<150) or (350<stopy<425)):
                        if ((75 < stopx < 150) or (300 < stopx< 375) ):
@@ -406,9 +373,7 @@ class alien(Frame):
                            break
 
                 if ((limity1<stopy<limity2)):
-                       print "zzzz"
                        if ((limitx1 < stopx < limitx2)):
-                           print "fffff"
                            self.canvas.delete(tagname)
                            self.myHealth -= 1
                            self.updateScore()
