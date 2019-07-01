@@ -30,3 +30,8 @@ python server.py <port number>
 cd Client-Side/Game-src
 python gameFrame.py <port number>
 ```
+## TODO 
+- clean code 
+- fix sockets behaviour 
+- package the app 
+- display players names 
