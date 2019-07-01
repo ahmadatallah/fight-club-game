@@ -1,18 +1,32 @@
 # Fight Club Bullet Shooting Game
-This Repo contains two sides one for clients (2 player maximum till now)<br />
-Client-Side/Game-src/gameFrame.py <br />
-and one for server <br />
-Server-Side/Game-src/server.py <br />
+Bullet shooting game with chat enabled. Developed in python using Tkinter UI package.
 
-# Commands to test
-on server: <br />
-python Server-Side/Game-src/server.py <<"port number">>  <br />
-on client: <br />
-python Client-Side/Game-src/gameFrame.py <<"port number">>  <br />
-besides The IP number <br />
+## File Structure <br />
+- Client-Side/Game-src/gameFrame.py for client side <br />
 
-server and client on the same: <br />
-python Server-Side/Game-src/server.py <<"port number">>  <br />
-sleep 3 <br />
-python Client-Side/Game-src/gameFrame.py <<"port number">> & <br />
-python Client-Side/Game-src/gameFrame.py <<"port number">><br />
+- Server-Side/Game-src/server.py for server side <br />
+
+## Commands
+### Prerequisites
+- install python-pyaudio: 
+```sh
+apt install python-pyaudio
+```
+
+- install python-tk
+```sh 
+apt install python-tk
+```
+
+### on server: <br />
+
+```sh 
+cd Server-Side/Game-src
+python server.py <port number>
+```
+
+### on client: <br />
+```sh
+cd Client-Side/Game-src
+python gameFrame.py <port number>
+```
